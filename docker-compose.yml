@@ -1,15 +1,23 @@
-version: '3.5'
-
+version: "3"
 services:
   cups:
+    image: voiov/cups-alpine:1.0
     container_name: cups
-    image: chuckcharlie/cups-avahi-airprint
-    #build: .
-    restart: always
-    network_mode: "host"
     environment:
-      CUPSADMIN: cups
-      CUPSPASSWORD: cups
+      - CUPSPASSWORD=cups
+      - TZ="Asin/Shanghai"
+      - CUPSADMIN=cups
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    networks:
+      - airprint_default
+    ports:
+      - 631:631/tcp
+    restart: always
     volumes:
-      - "./services:/services"
-      - "./config:/config"
+      - /var/run/dbus:/var/run/dbus:rw
+      - /vol1/1000/airprint/config:/config:rw
+      - /vol1/1000/airprint/services:/services:rw
+      - /dev:/dev:rw
+networks:
+  airprint_default:
+    external: true
