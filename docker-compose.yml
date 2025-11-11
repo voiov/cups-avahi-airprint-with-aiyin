@@ -1,6 +1,6 @@
 services:
   cups:
-    image: voiov/cups-alpine:1.0
+    image: voiov/cups-alpine:1.1
     container_name: cups
     restart: unless-stopped
     ports:
