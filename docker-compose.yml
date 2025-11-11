@@ -1,23 +1,21 @@
-version: "3"
 services:
   cups:
     image: voiov/cups-alpine:1.0
     container_name: cups
-    environment:
-      - CUPSPASSWORD=cups
-      - TZ="Asin/Shanghai"
-      - CUPSADMIN=cups
-      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-    networks:
-      - airprint_default
+    restart: unless-stopped
     ports:
-      - 631:631/tcp
-    restart: always
+      - "631:631/tcp"  # CUPS管理界面默认使用631端口[citation:9]
+    environment:
+      - CUPSADMIN=cups  # 设置CUPS管理员用户名[citation:10]
+      - CUPSPASSWORD=cups  # 设置CUPS管理员密码[citation:10]
+      - TZ=Asia/Shanghai  # 设置时区，请根据你的实际情况修改[citation:9]
     volumes:
-      - /var/run/dbus:/var/run/dbus:rw
-      - /vol1/1000/airprint/config:/config:rw
-      - /vol1/1000/airprint/services:/services:rw
-      - /dev:/dev:rw
-networks:
-  airprint_default:
-    external: true
+      - /var/run/dbus:/var/run/dbus  # 挂载DBus，用于与宿主机系统总线通信[citation:9][citation:10]
+      - ./cups/config:/config  # 持久化CUPS配置文件[citation:9]
+      - ./cups/services:/services  # 持久化CUPS服务文件[citation:9]
+    devices:
+      - /dev/bus  # 允许容器访问USB设备总线[citation:9][citation:10]
+      - /dev/usb  # 允许容器访问USB设备[citation:9][citation:10]
+    # 如果遇到设备识别问题，可以尝试更精细的设备挂载，例如：
+    # devices:
+    #   - /dev/bus/usb:/dev/bus/usb  # 挂载所有USB设备

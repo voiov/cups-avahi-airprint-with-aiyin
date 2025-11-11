@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM alpine:3
 
 # Install the packages we need. Avahi will be included
 RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
@@ -20,16 +20,6 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	py3-pycups \
 	perl \
 	&& rm -rf /var/cache/apk/*
-
-# Build and install brlaser from source
-RUN apk add --no-cache git cmake && \
-    git clone https://github.com/pdewacht/brlaser.git && \
-    cd brlaser && \
-    cmake . && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf brlaser
 
 # Build and install gutenprint from source
 RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
